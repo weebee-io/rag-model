@@ -15,19 +15,19 @@ import numpy as np  # nan/inf 체크용
 # └───────────────────────────────────────────────┘
 
 # Elasticsearch 인덱스명
-INDEX_NAME    = "finance_knowledge_chunks"
+INDEX_NAME = os.getenv("ES_INDEX_NAME", "finance_knowledge_chunks")
 
 # JSONL 파일을 모아둘 디렉토리 경로
 JSONL_FOLDER  = "/data/"
 
 # EC2에 배포된 Elasticsearch URL
-ES_URL        = "http://52.78.209.43:9200/"
+ES_URL = os.getenv("ES_URL")
 
-# 인증서 검증 여부 (False로 하면 HTTPS 인증서 무시)
-VERIFY_CERTS  = False
+# 인증서 검증 여부
+VERIFY_CERTS  = os.getenv("ES_VERIFY_CERTS", "false").lower() == "true"
 
 # ┌───────────────────────────────────────────────┐
-# │ 2. DAG 기본 인수                              │
+# │ 2. DAG 기본 인수                                │
 # └───────────────────────────────────────────────┘
 
 DEFAULT_ARGS = {
@@ -39,7 +39,7 @@ DEFAULT_ARGS = {
 }
 
 # ┌───────────────────────────────────────────────┐
-# │ 3. DAG 정의                                   │
+# │ 3. DAG 정의                                    │
 # └───────────────────────────────────────────────┘
 
 with DAG(
@@ -50,7 +50,7 @@ with DAG(
 ) as dag:
 
     # ┌─────────────────────────────────────────────┐
-    # │ 3-1. 인덱스 생성 Task                        │
+    # │ 3-1. 인덱스 생성 Task                          │
     # └─────────────────────────────────────────────┘
     def task_create_index(**context):
         """

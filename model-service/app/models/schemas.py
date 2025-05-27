@@ -1,4 +1,3 @@
-# app/api/v1/schemas.py
 from pydantic import BaseModel
 
 class ChatRequest(BaseModel):

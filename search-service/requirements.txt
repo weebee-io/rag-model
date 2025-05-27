@@ -1,0 +1,16 @@
+# FastAPI 서버 및 비동기 HTTP
+fastapi
+uvicorn
+httpx[http2]
+# # LLM 호출
+# openai
+# 검색 서버 (Elasticsearch)
+elasticsearch[async]==8.17.1
+aiohttp
+# 전처리 및 임베딩
+transformers
+torch
+# 설정 및 환경 관리
+pydantic
+pydantic-settings
+python-dotenv

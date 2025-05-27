@@ -1,14 +1,12 @@
-# app/core/config.py
-from pydantic import BaseSettings
+import os
+from dotenv import load_dotenv
 
-class Settings(BaseSettings):
-    search_api_url: str
-    openai_api_key: str
-    llm_model_name: str
-    max_context_docs: int = 5
+load_dotenv()
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+class Settings:
+    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
+    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+    OPENAI_TEMPERATURE: float = float(os.getenv("OPENAI_TEMPERATURE", 0.7))
+    OPENAI_MAX_TOKENS: int = int(os.getenv("OPENAI_MAX_TOKENS", 1024))
 
 settings = Settings()

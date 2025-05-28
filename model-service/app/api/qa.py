@@ -3,11 +3,10 @@ from fastapi import APIRouter, Query  # 또는 Body 사용
 from app.services.llm_qa import answer_question
 from app.models.schemas import QAResponse   # ← 스키마 임포트만 남김
 
-router = APIRouter(tags=["qa"])
-
+router = APIRouter()
 
 @router.get(
-    "/qa",
+    "/",
     response_model=QAResponse,
     summary="검색 기반 QA",
 )

@@ -1,5 +1,6 @@
 from .base import RetrieverStrategy
 from ..clients.elastic import es_client
+from ..core.config import settings
 from ..api.v1.schemas import Hit
 
 class BM25Retriever(RetrieverStrategy):
@@ -9,8 +10,10 @@ class BM25Retriever(RetrieverStrategy):
             "query": {
                 "multi_match": {
                     "query": query,
-                    "fields": ["text^2", "meta.keywords"],
-                    "analyzer": "nori_analyzer"
+                    # 제목보다 본문(text) 데이터에 가중치 2배
+                    "fields": ["text^2"],    # , "meta.keywords"],
+                    "analyzer": "nori_analyzer",
+                    "minimum_should_match": "75%"
                 }
             }
         }

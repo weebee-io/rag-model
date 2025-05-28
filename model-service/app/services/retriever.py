@@ -9,7 +9,7 @@ class SearchService:
     질문에 대한 청크(hits)를 비동기로 받아옵니다.
     """
 
-    BASE_URL = "http://127.0.0.1:8001/v1/search"
+    BASE_URL = "http://search-app:8000/v1/search"
 
     async def fetch(
         self,

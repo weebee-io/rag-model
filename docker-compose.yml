@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  model-app:
+    build:
+      context: ./model-service
+    ports:
+      - "8000:8000"
+    container_name: model-app
+    env_file:
+      - ./model-service/.env
+
+  search-app:
+    build:
+      context: ./search-service
+    ports:
+      - "8001:8000"
+    container_name: search-app
+    env_file:
+      - ./search-service/.env

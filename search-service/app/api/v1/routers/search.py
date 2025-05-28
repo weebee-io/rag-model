@@ -18,3 +18,5 @@ async def search(
         raise HTTPException(status_code=400, detail=f"Unsupported mode: {mode}")
     hits: List[Hit] = await retriever.search(q, top_k)
     return SearchResponse(query=q, mode=mode, hits=hits)
+
+search_router = router

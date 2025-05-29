@@ -1,6 +1,7 @@
 # app/services/retriever.py
 from typing import List, Dict
 import httpx
+from app.core.config import settings
 
 
 class SearchService:
@@ -9,7 +10,7 @@ class SearchService:
     질문에 대한 청크(hits)를 비동기로 받아옵니다.
     """
 
-    BASE_URL = "http://search-app:8000/v1/search"
+    BASE_URL = settings.BASE_URL
 
     async def fetch(
         self,

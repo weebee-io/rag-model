@@ -74,3 +74,63 @@ def add_chunk_prompt(question: str, hits: list[dict]) -> str:
     참고 문단:
     {context}
     """.strip()
+
+
+def build_keyword_extraction_prompt(full_text: str) -> str:
+    return f"""
+    너는 금융과 경제 전문 AI야. 아래의 문제와 보기 또는 뉴스 내용에서 금융이나 경제와 관련된 주요 키워드만 쉼표로 나열해서 추출해줘.
+    - 다른 설명은 하지 마
+    - 예: '기준금리, 통화량, 환율'
+
+    질문과 보기:
+    {full_text}
+    """
+
+
+def build_news_summary_prompt(content: str, keywords: List[str]) -> str:
+    """
+    뉴스 기사 요약 및 키워드 설명 요청 프롬프트.
+    """
+    keyword_str = ", ".join(keywords)
+    return f"""
+아래 뉴스 기사 내용을 반드시 아래 [출력 형식]에 맞춰 답변해.
+다른 말, 설명, 인사, 안내 없이 오직 [출력 형식]만 출력해.
+
+[출력 형식]
+요약: <1~2문장으로 간결한 요약>
+[키워드1: 개념 설명]
+[키워드2: 개념 설명]
+...
+
+뉴스 본문:
+{content}
+
+추출된 키워드:
+{keyword_str}
+""".strip()
+
+def build_keyword_explanation_prompt_with_context(keyword: str, context: str) -> str:
+    """
+    검색 결과(context)를 참고하여 키워드 개념 설명을 생성하는 프롬프트.
+    """
+    return f"""
+아래 참고 문단의 내용을 바탕으로 '{keyword}'의 금융/경제적 개념을 1~2문장으로 간결하게 설명해 주세요.
+다른 말, 인사, 안내 없이 아래 형식만 출력하세요.
+
+[출력 형식]
+[{keyword}: 간단한 개념 설명]
+
+참고 문단:
+{context}
+""".strip()
+
+def build_llm_fallback_prompt(keyword: str) -> str:
+    """
+    검색 결과가 없을 때 키워드 개념 설명을 요청하는 프롬프트.
+    """
+    return f"""
+'{keyword}'는 금융 또는 경제와 관련된 용어입니다.
+이 키워드에 대해 1문장으로 개념을 설명해 주세요. 결과는 아래 형식으로만 출력하세요:
+
+[{keyword}: 간단한 개념 설명]
+""".strip()

@@ -28,3 +28,34 @@ class QAResponse(BaseModel):
     # sources: List[Chunk] = Field(
     #     ..., description="검색해서 사용한 원문 청크"
     # )
+
+
+class QAChoice(BaseModel):
+    question: str
+    choices: List[str]
+
+class QAExplanationResponse(BaseModel):
+    answer: str
+    keywords: List[str]
+
+
+# 🔸 기능 1: 퀴즈 힌트
+class QAChoice(BaseModel):
+    question: str
+    choices: List[str]
+
+
+class QAHintResponse(BaseModel):
+    keywords: List[str]
+    hint: str
+
+
+# 🔸 기능 2: 뉴스 요약 + 개념 설명
+class NewsRequest(BaseModel):
+    content: str
+
+
+class NewsSummaryResponse(BaseModel):
+    summary: str
+    keywords: List[str]
+    explanation: str

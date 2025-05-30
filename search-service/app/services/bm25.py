@@ -22,6 +22,7 @@ class BM25Retriever(RetrieverStrategy):
             Hit(
                 doc_id=hit["_id"],
                 score=hit["_score"],
+                source=hit["_source"]["source"],
                 text=hit["_source"]["text"]
             )
             for hit in resp["hits"]["hits"]

@@ -6,9 +6,9 @@ from app.core.config import settings
 from app.services.retriever import SearchService
 from app.services.prompt_main import (
     keyword_prompt,
-    build_hint_prompt,
-    build_hint_rag_prompt,
-    build_hint_llm_prompt,
+    build_news_prompt,
+    build_news_rag_prompt,
+    build_news_llm_prompt,
 )
 from app.services.chunker import hits_to_context
 
@@ -27,12 +27,11 @@ async def extract_keywords(text: str) -> List[str]:
 
 
 
-async def generate_hint(question: str, choices: List[str]) -> Dict:
-    full_text = f"{question}\n보기:\n" + "\n".join(f"- {c}" for c in choices)
-    keywords = await extract_keywords(full_text)
+async def generate_summary(news: str) -> str:
+    keywords = await extract_keywords(news)
 
     if not keywords:                       # 키워드가 없으면 곧바로 LLM으로
-        prompt = build_hint_prompt(full_text)
+        prompt = build_news_prompt(news)
         resp = await client.chat.completions.create(
             model=settings.OPENAI_MODEL,
             messages=[{"role": "user", "content": prompt}],
@@ -49,13 +48,13 @@ async def generate_hint(question: str, choices: List[str]) -> Dict:
 
     if hits:
         context = hits_to_context(hits)                   # 텍스트 병합
-        prompt = build_hint_rag_prompt(
-            text=full_text,
+        prompt = build_news_rag_prompt(
+            text=news,
             keyword=keywords,
             context=context,
         )
     else:
-        prompt = build_hint_llm_prompt(full_text, keywords)
+        prompt = build_news_llm_prompt(news, keywords)
 
     response = await client.chat.completions.create(
         model=settings.OPENAI_MODEL,
@@ -63,7 +62,7 @@ async def generate_hint(question: str, choices: List[str]) -> Dict:
         temperature=0.3,
     )
 
-    hint = response.choices[0].message.content.strip()
+    summary = response.choices[0].message.content.strip()
  
 
-    return {"hint": hint}
+    return {"summary": summary}

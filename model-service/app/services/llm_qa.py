@@ -18,8 +18,8 @@ async def answer_question(
     hits: List[dict] = await search.fetch(q, mode=mode, top_k=top_k)
 
     # 검색 결과가 없으면 즉시 회신
-    if not hits:
-        return {"answer": "잘모르겠습니다", "sources": []}
+    # if not hits:
+    #     return {"answer": "잘모르겠습니다", "sources": []}
 
     # 🔹 프롬프트를 외부 모듈에서 빌드
     prompt = build_qa_prompt(question=q, hits=hits)

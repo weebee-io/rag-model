@@ -9,6 +9,9 @@ services:
     container_name: model-app
     env_file:
       - ./model-service/.env
+    volumes:
+      - ./model-service:/app/model-service
+
 
   search-app:
     build:
@@ -18,3 +21,5 @@ services:
     container_name: search-app
     env_file:
       - ./search-service/.env
+    volumes:
+      - ./search-service:/app/search-service

@@ -49,7 +49,8 @@ async def answer_question(question: str) -> str:
 
     # 2. 키워드 전체를 검색 쿼리로 사용하여 관련 청크를 한 번에 받아옴
     search = SearchService()
-    hits = await search.fetch(keywords_str, top_k=5)  # top_k는 필요에 따라 조정
+    # hits = await search.fetch(keywords_str, top_k=5)  # top_k는 필요에 따라 조정
+    hits = await search.fetch(question, mode="hybrid", top_k=5)
 
     if hits:
         context = hits_to_context(hits)                   # 텍스트 병합

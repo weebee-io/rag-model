@@ -134,3 +134,90 @@ def build_llm_fallback_prompt(keyword: str) -> str:
 
 [{keyword}: 간단한 개념 설명]
 """.strip()
+
+
+def keyword_prompt(full_text: str) -> str:
+    return f"""
+    너는 금융과 경제에 특화된 전문 키워드 추출 AI야.
+
+    아래 텍스트에서 '금융' 또는 '경제'와 관련된 전문 용어만 쉼표로 구분해서 추출해.
+    - 반드시 **금융 또는 경제 관련 용어**만 포함할 것. (예: '금리', '채권', '환율', '여신', '파킹통장', '인플레이션')
+    - 일반 단어, 상황 설명, 인물 이름, 지명, 기관명, '책', '정부' 등 **비금융/비경제 단어는 절대 포함하지 말 것.**
+    - 해당 단어가 문맥상 중요해 보여도 **금융·경제 용어가 아니면 무조건 제외**.
+    - 결과는 **쉼표로 구분된 키워드 리스트**만 출력 (예: '금리, 환율, 인플레이션')
+    - 출력 외에 그 어떤 설명도 하지 마.
+
+    입력 텍스트:
+    {full_text}
+    """
+
+
+def build_keyword_explanation(text: str, keyword: str, context: str) -> str:
+    """
+    검색 결과(context)를 참고하여 키워드 개념 설명을 생성하는 프롬프트.
+    """
+    return f"""
+아래 참고 문단의 내용을 바탕으로 '{keyword}'의 금융/경제적 개념을 1~2문장으로 간결하게 설명해 주세요.
+다른 말, 인사, 안내 없이 아래 형식만 출력하세요.
+
+[출력 형식]
+[{keyword}: 간단한 개념 설명]
+
+참고 문단:
+{context}
+""".strip()
+def build_news_explanation_prompt(text: str, keyword: str, context: str) -> str:
+    """
+    검색 결과(context)를 참고하여 키워드 개념 설명을 생성하는 프롬프트.
+    """
+    return f"""
+아래 참고 문단의 내용을 바탕으로 '{keyword}'의 금융/경제적 개념을 1~2문장으로 간결하게 설명해 주세요.
+다른 말, 인사, 안내 없이 아래 형식만 출력하세요.
+
+[뉴스]
+{text}
+
+[출력 형식]
+[{keyword}: 간단한 개념 설명]
+
+참고 문단:
+{context}
+""".strip()
+
+
+def build_news_explanation_prompt(text: str, keyword: str, context: str) -> str:
+    """
+    검색 결과(context)를 참고하여 키워드 개념 설명을 생성하는 프롬프트.
+    """
+    return f"""
+아래 참고 문단의 내용을 바탕으로 '{keyword}'의 금융/경제적 개념을 1~2문장으로 간결하게 설명해 주세요.
+다른 말, 인사, 안내 없이 아래 형식만 출력하세요.
+
+[뉴스]
+{text}
+
+[출력 형식]
+[{keyword}: 간단한 개념 설명]
+
+참고 문단:
+{context}
+""".strip()
+
+def build_hint_generation_prompt(text: str, keyword: str, context: str) -> str:
+    """
+    검색 결과(context)를 참고하여 키워드 개념 설명을 생성하는 프롬프트.
+    """
+    return f"""
+아래 참고 문단의 내용을 바탕으로 '{keyword}'의 금융/경제적 개념을 1~2문장으로 간결하게 설명해 주세요.
+다른 말, 인사, 안내 없이 아래 형식만 출력하세요.
+
+[뉴스]
+{text}
+
+[출력 형식]
+[{keyword}: 간단한 개념 설명]
+
+참고 문단:
+{context}
+""".strip()
+

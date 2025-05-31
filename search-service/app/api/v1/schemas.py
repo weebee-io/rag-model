@@ -4,6 +4,7 @@ from typing import List
 class Hit(BaseModel):
     doc_id: str
     score: float
+    source: str
     text: str
 
 class SearchResponse(BaseModel):

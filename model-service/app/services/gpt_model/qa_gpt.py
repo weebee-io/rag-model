@@ -1,14 +1,14 @@
-import asyncio
 from openai import AsyncOpenAI
+import asyncio
 from typing import List, Dict
 
 from app.core.config import settings
 from app.services.retriever import SearchService
 from app.services.prompt_main import (
     keyword_prompt,
-    build_hint_prompt,
-    build_hint_rag_prompt,
-    build_hint_llm_prompt,
+    build_answer_prompt,
+    build_answer_rag_prompt,
+    build_answer_llm_prompt
 )
 from app.services.chunker import hits_to_context
 
@@ -16,6 +16,9 @@ client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
 
 async def extract_keywords(text: str) -> List[str]:
+    """
+    질문에 대한 키워드 출력
+    """
     prompt = keyword_prompt(text)
     response = await client.chat.completions.create(
         model=settings.OPENAI_MODEL,
@@ -26,13 +29,14 @@ async def extract_keywords(text: str) -> List[str]:
     return [k.strip() for k in keyword_str.split(",") if k.strip()]
 
 
-
-async def generate_hint(question: str, choices: List[str]) -> Dict:
-    full_text = f"{question}\n보기:\n" + "\n".join(f"- {c}" for c in choices)
-    keywords = await extract_keywords(full_text)
-
+async def answer_question(question: str) -> str:
+    """
+    키워드를 추출하여, 키워드 전체를 쉼표로 합친 문자열로 검색 모델에 한 번에 넣고,
+    받아온 청크(context)와 질문을 LLM에 전달해 답변을 생성합니다.
+    """
+    keywords = await extract_keywords(question)
     if not keywords:                       # 키워드가 없으면 곧바로 LLM으로
-        prompt = build_hint_prompt(full_text)
+        prompt = build_answer_prompt(question)
         resp = await client.chat.completions.create(
             model=settings.OPENAI_MODEL,
             messages=[{"role": "user", "content": prompt}],
@@ -49,13 +53,13 @@ async def generate_hint(question: str, choices: List[str]) -> Dict:
 
     if hits:
         context = hits_to_context(hits)                   # 텍스트 병합
-        prompt = build_hint_rag_prompt(
-            text=full_text,
+        prompt = build_answer_rag_prompt(
+            text=question,
             keyword=keywords,
             context=context,
         )
     else:
-        prompt = build_hint_llm_prompt(full_text, keywords)
+        prompt = build_answer_llm_prompt(question, keywords)
 
     response = await client.chat.completions.create(
         model=settings.OPENAI_MODEL,
@@ -63,7 +67,9 @@ async def generate_hint(question: str, choices: List[str]) -> Dict:
         temperature=0.3,
     )
 
-    hint = response.choices[0].message.content.strip()
- 
+    answer = response.choices[0].message.content.strip()
 
-    return {"hint": hint}
+    return {
+        "answer": answer
+    }
+

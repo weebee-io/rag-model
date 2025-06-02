@@ -1,0 +1,23 @@
+########################
+# filebeat.yml
+########################
+
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/fastapi/qa/qa_request_response.log   # QA 전용 로그 파일 경로
+    tags: ["qa"]                                     # Logstash 쪽에서 'qa' 태그로 구분
+    fields:
+      service: qa_service
+    fields_under_root: true
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+output.logstash:
+  hosts: ["52.78.209.43:5044"]    # Logstash 서버(컨테이너 이름 또는 호스트): 포트
+  # 옵션 예시 (필요 시):
+  # ssl.enabled: true
+  # ssl.certificate_authorities: ["/etc/pki/tls/certs/logstash-beats.crt"]

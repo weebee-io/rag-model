@@ -1,0 +1,38 @@
+filebeat.inputs:
+  # 컨테이너 stdout
+  - type: container
+    paths: [/var/lib/docker/containers/*/*.log]
+    processors:
+      - add_docker_metadata: ~
+      - drop_event:          # Filebeat 자기 로그 제외
+          when:
+            regexp:
+              container.name: '^filebeat$'
+
+  # FastAPI 파일 로그
+  - type: log
+    paths:
+      - /var/log/fastapi/model/*.log
+      - /var/log/fastapi/search/*.log
+    include_lines:
+      - '"GET /docs'
+      - '"GET /redoc'
+      - '"GET /openapi\.json'
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+    fields:
+      service: fastapi
+    fields_under_root: true
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~
+
+# 테스트용 콘솔 출력
+output.console:
+  enabled: true
+  pretty: true
+
+setup.ilm.enabled: false
+setup.template.enabled: false

@@ -4,7 +4,9 @@ from fastapi import APIRouter
 from app.services.gpt_model.qa_gpt import answer_question
 from app.models.schemas import QuestionResponse, QuestionRequest  # ← 요청 모델 추가
 
-router = APIRouter()
+router = APIRouter(
+     tags=["QA"],
+)
 
 @router.post(
     "/",

@@ -70,7 +70,6 @@ def build_answer_rag_prompt(text: str, keyword: str, context: str) -> str:
         [출력 형식]
         답변: (간결한 설명 1~2문장)
         관련 검색어: (키워드1, 키워드2, 키워드3)
-        참고문단: (context 내용)
     """.strip()
 
 def build_answer_llm_prompt(text: str, keyword: str) -> str:
